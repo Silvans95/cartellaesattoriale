@@ -37,10 +37,23 @@ public class ContribuenteDTO {
 	@JsonIgnoreProperties(value = { "contribuente" })
 	private Set<CartellaEsattorialeDTO> cartelle = new HashSet<CartellaEsattorialeDTO>(0);
 
+	public ContribuenteDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public ContribuenteDTO(Long id, String nome, String cognome, Date dataDiNascita, String codiceFiscale,
 			String indirizzo) {
 		super();
 		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataDiNascita = dataDiNascita;
+		this.codiceFiscale = codiceFiscale;
+		this.indirizzo = indirizzo;
+	}
+
+	public ContribuenteDTO(String nome, String cognome, Date dataDiNascita, String codiceFiscale, String indirizzo) {
+		super();
 		this.nome = nome;
 		this.cognome = cognome;
 		this.dataDiNascita = dataDiNascita;
@@ -122,12 +135,14 @@ public class ContribuenteDTO {
 				this.indirizzo);
 	}
 
-	public static ContribuenteDTO buildContribuenteDTOFromModel(Contribuente contribuenteModel, boolean includeCartelle) {
+	public static ContribuenteDTO buildContribuenteDTOFromModel(Contribuente contribuenteModel,
+			boolean includeCartelle) {
 		ContribuenteDTO result = new ContribuenteDTO(contribuenteModel.getId(), contribuenteModel.getNome(),
-				contribuenteModel.getCognome(), contribuenteModel.getDataDiNascita(), contribuenteModel.getCodiceFiscale(),
-				contribuenteModel.getIndirizzo());
+				contribuenteModel.getCognome(), contribuenteModel.getDataDiNascita(),
+				contribuenteModel.getCodiceFiscale(), contribuenteModel.getIndirizzo());
 		if (includeCartelle)
-			result.setCartelle(CartellaEsattorialeDTO.createCartellaEsattorialeDTOSetFromModelSet(contribuenteModel.getCartelle(), false));
+			result.setCartelle(CartellaEsattorialeDTO
+					.createCartellaEsattorialeDTOSetFromModelSet(contribuenteModel.getCartelle(), false));
 		return result;
 	}
 

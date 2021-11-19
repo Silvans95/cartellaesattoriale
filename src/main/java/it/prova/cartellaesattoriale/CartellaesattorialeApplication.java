@@ -57,8 +57,7 @@ public class CartellaesattorialeApplication implements CommandLineRunner {
 
 		CartellaEsattoriale topo = new CartellaEsattoriale("fortunato", 20, Stato.CONCLUSA, contribuenteTopolino);
 		if (cartellaService.findByDescrizioneAndImporto("fortunato", 20) != null)
-			;
-		cartellaService.inserisciNuovo(topo);
+			cartellaService.inserisciNuovo(topo);
 
 	}
 

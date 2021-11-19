@@ -33,6 +33,10 @@ public class CartellaEsattorialeDTO {
 	@NotNull(message = "{contribuente.notnull}")
 	private ContribuenteDTO contribuente;
 
+	public CartellaEsattorialeDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public CartellaEsattorialeDTO(Long id, String descrizione, Integer importo, Stato stato) {
 		super();
 		this.id = id;
