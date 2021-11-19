@@ -19,6 +19,8 @@ public interface CartellaEsattorialeService {
 	void rimuovi(CartellaEsattoriale cartellaInstance);
 
 	List<CartellaEsattoriale> findByExample(CartellaEsattoriale example);
+	
+	public List<CartellaEsattoriale> findByDescrizioneAndImporto(String descrizione, Integer importo);
 
 
 }

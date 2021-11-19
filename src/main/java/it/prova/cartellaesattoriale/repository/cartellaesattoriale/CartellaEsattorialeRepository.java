@@ -15,4 +15,6 @@ public interface CartellaEsattorialeRepository extends CrudRepository<CartellaEs
 	@Query("select f from CartellaEsattoriale f join fetch f.contribuente")
 	List<CartellaEsattoriale> findAllCartellaEsattorialeEager();
 
+	List<CartellaEsattoriale> findByDescrizioneAndImporto(String descrizione, Integer importo);
+	
 }

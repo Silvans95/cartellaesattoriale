@@ -32,15 +32,15 @@ public class CustomCartellaEsattorialeRepositoryImpl implements CustomCartellaEs
 		}
 
 		if (example.getImporto() != null) {
-			whereClauses.add(" r.importo like :importo ");
-			paramaterMap.put("importo", "%" + example.getImporto() + "%");
+			whereClauses.add(" r.importo >= :importo ");
+			paramaterMap.put("importo", example.getImporto());
 		}
 		if (example.getStato() != null) {
 			whereClauses.add(" r.stato =:stato ");
 			paramaterMap.put("stato", example.getStato());
 		}
 		if (example.getContribuente() != null && example.getContribuente().getId() != null) {
-			whereClauses.add(" c.id = :cContribuente ");
+			whereClauses.add(" c.id = :idContribuente ");
 			paramaterMap.put("idContribuente", example.getContribuente().getId());
 		}
 		queryBuilder.append(!whereClauses.isEmpty() ? " and " : "");

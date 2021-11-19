@@ -45,7 +45,13 @@ public class CartellaEsattorialeServiceImpl implements CartellaEsattorialeServic
 		repository.delete(cartellaInstance);
 	}
 
+	@Transactional
 	public List<CartellaEsattoriale> findByExample(CartellaEsattoriale example) {
 		return repository.findByExample(example);
+	}
+
+	@Transactional
+	public List<CartellaEsattoriale> findByDescrizioneAndImporto(String descrizione, Integer importo) {
+		return repository.findByDescrizioneAndImporto(descrizione, importo);
 	}
 }

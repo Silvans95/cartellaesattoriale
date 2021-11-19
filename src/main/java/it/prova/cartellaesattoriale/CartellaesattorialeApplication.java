@@ -40,7 +40,7 @@ public class CartellaesattorialeApplication implements CommandLineRunner {
 
 		CartellaEsattoriale papero = new CartellaEsattoriale("sfigato", 10000, Stato.IN_CONTENZIOSO,
 				contribuentePaperino);
-		if (cartellaService.findByExample(papero) != null)
+		if (cartellaService.findByDescrizioneAndImporto("sfigato", 10000) != null)
 			cartellaService.inserisciNuovo(papero);
 
 		// ##################################################################
@@ -56,8 +56,9 @@ public class CartellaesattorialeApplication implements CommandLineRunner {
 		}
 
 		CartellaEsattoriale topo = new CartellaEsattoriale("fortunato", 20, Stato.CONCLUSA, contribuenteTopolino);
-		if (cartellaService.findByExample(topo) != null)
-			cartellaService.inserisciNuovo(topo);
+		if (cartellaService.findByDescrizioneAndImporto("fortunato", 20) != null)
+			;
+		cartellaService.inserisciNuovo(topo);
 
 	}
 
