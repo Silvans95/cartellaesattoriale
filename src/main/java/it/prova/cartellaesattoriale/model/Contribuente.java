@@ -66,7 +66,21 @@ public class Contribuente {
 		this.codiceFiscale = codiceFiscale;
 		this.indirizzo = indirizzo;
 	}
+	
 
+	public Contribuente( String nome, String cognome, Date dataDiNascita, String codiceFiscale,
+			String indirizzo) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataDiNascita = dataDiNascita;
+		this.codiceFiscale = codiceFiscale;
+		this.indirizzo = indirizzo;
+	}
+
+	
+
+	
 	public Long getId() {
 		return id;
 	}

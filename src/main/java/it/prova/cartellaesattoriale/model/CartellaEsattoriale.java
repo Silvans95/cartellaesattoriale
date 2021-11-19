@@ -48,6 +48,15 @@ public class CartellaEsattoriale {
 		this.contribuente = contribuente;
 	}
 
+	public CartellaEsattoriale(String descrizione, Integer importo, Stato stato, Contribuente contribuente) {
+		super();
+		this.descrizione = descrizione;
+		this.importo = importo;
+		this.stato = stato;
+		this.contribuente = contribuente;
+	}
+
+	
 	public Long getId() {
 		return id;
 	}
