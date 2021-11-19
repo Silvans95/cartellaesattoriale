@@ -37,7 +37,6 @@ public class Contribuente {
 	@Column(name = "indirizzo")
 	private String indirizzo;
 
-
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contribuente")
 	private Set<CartellaEsattoriale> cartelle = new HashSet<CartellaEsattoriale>(0);
 
@@ -55,6 +54,17 @@ public class Contribuente {
 		this.codiceFiscale = codiceFiscale;
 		this.indirizzo = indirizzo;
 		this.cartelle = cartelle;
+	}
+
+	public Contribuente(Long id, String nome, String cognome, Date dataDiNascita, String codiceFiscale,
+			String indirizzo) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataDiNascita = dataDiNascita;
+		this.codiceFiscale = codiceFiscale;
+		this.indirizzo = indirizzo;
 	}
 
 	public Long getId() {
