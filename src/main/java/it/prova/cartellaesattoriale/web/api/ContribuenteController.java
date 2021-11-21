@@ -93,6 +93,23 @@ public class ContribuenteController {
 	}
 
 //	####################################################
+
+	@GetMapping("/verificaContenzioso")
+	public List<ContribuenteMetodiDTO> verificaContenzioso() {
+		List<ContribuenteMetodiDTO> contribuenti = ContribuenteMetodiDTO
+				.createContribuenteDTOListFromModelList(contribuenteService.listAllElements(), true);
+		
+		contribuenti.stream().forEach(item -> {
+			item.getCartelle().stream().forEach(cartelle -> {
+				if (cartelle.getStato().equals(Stato.IN_CONTENZIOSO)) {
+					item.setDaAttenzionare(true);
+				}
+			});
+		});
+		return contribuenti;
+	}
+
+//	####################################################
 	@GetMapping("/reportContribuenti")
 	public List<ContribuenteMetodiDTO> reportContribuenti() {
 		List<ContribuenteMetodiDTO> contribuenti = ContribuenteMetodiDTO
@@ -114,7 +131,6 @@ public class ContribuenteController {
 					con.setInContenzioso(con.getInContenzioso() + car.getImporto());
 				}
 			});
-			con.setCartelle(null);
 		});
 
 //		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {

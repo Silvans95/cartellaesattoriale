@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -33,15 +34,16 @@ public class ContribuenteMetodiDTO {
 
 	@NotBlank(message = "{indirizzo.notblank}")
 	private String indirizzo;
-	
+
 	private Integer totale;
 	private Integer conclusoPagato;
 	private Integer inContenzioso;
+	private Boolean daAttenzionare;
 
+	@JsonIgnore
 	@JsonIgnoreProperties(value = { "contribuente" })
 	private Set<CartellaEsattorialeDTO> cartelle = new HashSet<CartellaEsattorialeDTO>(0);
 
-	
 	public ContribuenteMetodiDTO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -157,6 +159,14 @@ public class ContribuenteMetodiDTO {
 
 	public void setCartelle(Set<CartellaEsattorialeDTO> cartelle) {
 		this.cartelle = cartelle;
+	}
+
+	public Boolean getDaAttenzionare() {
+		return daAttenzionare;
+	}
+
+	public void setDaAttenzionare(Boolean daAttenzionare) {
+		this.daAttenzionare = daAttenzionare;
 	}
 
 	// ##################################################
