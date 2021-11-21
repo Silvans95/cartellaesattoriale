@@ -1,5 +1,6 @@
 package it.prova.cartellaesattoriale.web.api;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.prova.cartellaesattoriale.dto.CartellaEsattorialeDTO;
 import it.prova.cartellaesattoriale.dto.ContribuenteDTO;
+import it.prova.cartellaesattoriale.dto.ContribuenteMetodiDTO;
 import it.prova.cartellaesattoriale.model.Contribuente;
+import it.prova.cartellaesattoriale.model.Stato;
 import it.prova.cartellaesattoriale.service.ContribuenteService;
 import it.prova.cartellaesattoriale.web.api.exception.CartelleAssociateException;
 import it.prova.cartellaesattoriale.web.api.exception.ContribuenteNotFoundException;
 import it.prova.cartellaesattoriale.web.api.exception.IdNotNullForInsertException;
-
 
 @RestController
 @RequestMapping("api/contribuente")
@@ -49,17 +52,18 @@ public class ContribuenteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ContribuenteDTO createNew(@Valid @RequestBody ContribuenteDTO contribuenteInput) {
-		
-		if(contribuenteInput.getId() != null)
+
+		if (contribuenteInput.getId() != null)
 			throw new IdNotNullForInsertException("Non è ammesso fornire un id per la creazione");
 
- 		
-		Contribuente contribuenteInserito = contribuenteService.inserisciNuovo(contribuenteInput.buildContribuenteModel());
+		Contribuente contribuenteInserito = contribuenteService
+				.inserisciNuovo(contribuenteInput.buildContribuenteModel());
 		return ContribuenteDTO.buildContribuenteDTOFromModel(contribuenteInserito, false);
 	}
 
 	@PutMapping("/{id}")
-	public ContribuenteDTO update(@Valid @RequestBody ContribuenteDTO contribuenteInput, @PathVariable(required = true) Long id) {
+	public ContribuenteDTO update(@Valid @RequestBody ContribuenteDTO contribuenteInput,
+			@PathVariable(required = true) Long id) {
 		Contribuente contribuente = contribuenteService.caricaSingoloElemento(id);
 
 		if (contribuente == null)
@@ -80,14 +84,51 @@ public class ContribuenteController {
 
 		if (contribuente.getCartelle() != null)
 			throw new CartelleAssociateException("Ci sono ancora delle cartelleEsattoriali associati al contribuente");
-		
+
 		contribuenteService.rimuovi(contribuente);
 	}
 
 	@PostMapping("/search")
 	public List<ContribuenteDTO> search(@RequestBody ContribuenteDTO example) {
-		return ContribuenteDTO.createContribuenteDTOListFromModelList(contribuenteService.findByExample(example.buildContribuenteModel()),
-				false);
+		return ContribuenteDTO.createContribuenteDTOListFromModelList(
+				contribuenteService.findByExample(example.buildContribuenteModel()), false);
+	}
+
+//	####################################################
+
+	@GetMapping("/reportContribuenti")
+	public List<ContribuenteMetodiDTO> reportContribuenti() {
+		List<ContribuenteMetodiDTO> contribuenti = ContribuenteMetodiDTO
+				.createContribuenteDTOListFromModelList(contribuenteService.listAllElements(), true);
+
+		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
+			Integer importoTotale = 0;
+			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
+				importoTotale = importoTotale + cartelleItem.getImporto();
+				contribuentiItem.setTotale(importoTotale);
+			}
+		}
+
+		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
+			Integer conclusoPagato = 0;
+			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
+				if (cartelleItem.getStato() == Stato.CONCLUSA) {
+					conclusoPagato = conclusoPagato + cartelleItem.getImporto();
+					contribuentiItem.setConclusoPagato(conclusoPagato);
+				}
+			}
+		}
+
+		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
+			Integer inContenzioso = 0;
+			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
+				if (cartelleItem.getStato() == Stato.IN_CONTENZIOSO) {
+					inContenzioso = inContenzioso + cartelleItem.getImporto();
+					contribuentiItem.setInContenzioso(inContenzioso);
+				}
+			}
+		}
+		return contribuenti;
 	}
 
 }
