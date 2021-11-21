@@ -1,6 +1,5 @@
 package it.prova.cartellaesattoriale.web.api;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.prova.cartellaesattoriale.dto.CartellaEsattorialeDTO;
 import it.prova.cartellaesattoriale.dto.ContribuenteDTO;
 import it.prova.cartellaesattoriale.dto.ContribuenteMetodiDTO;
 import it.prova.cartellaesattoriale.model.Contribuente;
@@ -95,39 +93,57 @@ public class ContribuenteController {
 	}
 
 //	####################################################
-
 	@GetMapping("/reportContribuenti")
 	public List<ContribuenteMetodiDTO> reportContribuenti() {
 		List<ContribuenteMetodiDTO> contribuenti = ContribuenteMetodiDTO
 				.createContribuenteDTOListFromModelList(contribuenteService.listAllElements(), true);
 
-		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
-			Integer importoTotale = 0;
-			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
-				importoTotale = importoTotale + cartelleItem.getImporto();
-				contribuentiItem.setTotale(importoTotale);
-			}
-		}
-
-		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
-			Integer conclusoPagato = 0;
-			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
-				if (cartelleItem.getStato() == Stato.CONCLUSA) {
-					conclusoPagato = conclusoPagato + cartelleItem.getImporto();
-					contribuentiItem.setConclusoPagato(conclusoPagato);
+		contribuenti.stream().forEach(con -> {
+			con.setTotale(0);
+			con.setConclusoPagato(0);
+			con.setInContenzioso(0);
+			con.getCartelle().stream().forEach(car -> {
+				// conto del totale
+				con.setTotale(con.getTotale() + car.getImporto());
+				// conto delle cartelle pagate
+				if (car.getStato() == Stato.CONCLUSA) {
+					con.setConclusoPagato(con.getConclusoPagato() + car.getImporto());
 				}
-			}
-		}
-
-		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
-			Integer inContenzioso = 0;
-			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
-				if (cartelleItem.getStato() == Stato.IN_CONTENZIOSO) {
-					inContenzioso = inContenzioso + cartelleItem.getImporto();
-					contribuentiItem.setInContenzioso(inContenzioso);
+				// conto in contenzioso
+				if (car.getStato() == Stato.IN_CONTENZIOSO) {
+					con.setInContenzioso(con.getInContenzioso() + car.getImporto());
 				}
-			}
-		}
+			});
+			con.setCartelle(null);
+		});
+
+//		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
+//			Integer importoTotale = 0;
+//			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
+//				importoTotale = importoTotale + cartelleItem.getImporto();
+//				contribuentiItem.setTotale(importoTotale);
+//			}
+//		}
+//		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
+//			Integer conclusoPagato = 0;
+//			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
+//				if (cartelleItem.getStato() == Stato.CONCLUSA) {
+//					conclusoPagato = conclusoPagato + cartelleItem.getImporto();
+//					contribuentiItem.setConclusoPagato(conclusoPagato);
+//				}
+//			}
+//		}
+//		for (ContribuenteMetodiDTO contribuentiItem : contribuenti) {
+//			Integer inContenzioso = 0;
+//			for (CartellaEsattorialeDTO cartelleItem : contribuentiItem.getCartelle()) {
+//				if (cartelleItem.getStato() == Stato.IN_CONTENZIOSO) {
+//					inContenzioso = inContenzioso + cartelleItem.getImporto();
+//					contribuentiItem.setInContenzioso(inContenzioso);
+//				}
+//			}
+//			contribuentiItem.setCartelle(null);
+//		}
+
 		return contribuenti;
 	}
 

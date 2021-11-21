@@ -33,14 +33,15 @@ public class ContribuenteMetodiDTO {
 
 	@NotBlank(message = "{indirizzo.notblank}")
 	private String indirizzo;
-
-	@JsonIgnoreProperties(value = { "contribuente" })
-	private Set<CartellaEsattorialeDTO> cartelle = new HashSet<CartellaEsattorialeDTO>(0);
-
+	
 	private Integer totale;
 	private Integer conclusoPagato;
 	private Integer inContenzioso;
 
+	@JsonIgnoreProperties(value = { "contribuente" })
+	private Set<CartellaEsattorialeDTO> cartelle = new HashSet<CartellaEsattorialeDTO>(0);
+
+	
 	public ContribuenteMetodiDTO() {
 		// TODO Auto-generated constructor stub
 	}
